@@ -1,0 +1,8 @@
+env
+node_modules
+/**/*/.env
+/**/*/migrations/
+/**/*/.idea
+.idea
+pnpm-lock.yaml
+.firebase/
