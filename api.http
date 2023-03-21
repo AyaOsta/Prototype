@@ -1,2 +1,2 @@
 ### GET Questions
-GET http://localhost:8000/questions
+GET http://13.92.156.103:8000/users/2/major
