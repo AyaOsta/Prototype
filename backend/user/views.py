@@ -3,11 +3,11 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from responses.models import ResponseModel
+from user.major_ml import y_pred
 from user.models import UserModel
 from user.serializer import UserSerializer
 
 
-# Create your views here.
 class UserListView(generics.ListCreateAPIView):
     queryset = UserModel.objects.all()
     serializer_class = UserSerializer
@@ -26,7 +26,12 @@ class MlMajorView(generics.GenericAPIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         responses = ResponseModel.objects.filter(user=user)
+        response_array = []
 
-        ## todo feed the data to the ai
+        for response in responses:
+            response_array.append(response)
+
+        major = y_pred(response_array)
+        print(major)
 
         return Response(status=status.HTTP_200_OK)

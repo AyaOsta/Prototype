@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from "react";
 
-export function MagicalText({ text }) {
-  const starsRef = useRef([]);
+export function MagicalText({ text }: { text: string }) {
+  const starsRef = useRef<Array<HTMLSpanElement | null>>([]);
 
   useEffect(() => {
-    const rand = (min, max) =>
+    const rand = (min: number, max: number) =>
       Math.floor(Math.random() * (max - min + 1)) + min;
 
-    const animate = (star) => {
+    const animate = (star: HTMLSpanElement) => {
       star.current.style.setProperty("--star-left", `${rand(-10, 100)}%`);
       star.current.style.setProperty("--star-top", `${rand(-40, 80)}%`);
 
@@ -18,9 +18,10 @@ export function MagicalText({ text }) {
 
     starsRef.current.forEach((star, index) => {
       setTimeout(() => {
-        animate(star);
-
-        setInterval(() => animate(star), 1000);
+        if (star) {
+          animate(star);
+          setInterval(() => animate(star), 1000);
+        }
       }, index * (1000 / 3));
     });
   }, []);

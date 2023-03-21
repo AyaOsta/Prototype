@@ -8,6 +8,7 @@ import { UserSchema } from "../schema/user.schema";
 import toast from "react-hot-toast";
 import { useCreateResponse } from "../hooks/response.hook";
 import { MagicalText } from "./magic.component";
+import { colors } from "../data/colors";
 
 export function MenuComponent() {
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -17,9 +18,10 @@ export function MenuComponent() {
   const [showInput, setShowInput] = useState(false);
   const [arrowHovered, setArrowHovered] = useState<boolean>(false);
   const [questionNumber, setQuestionNumber] = useState(0);
-  const [end, setEnd] = useState(false);
   const [user, setUser] = useState<UserSchema | undefined>();
   const [answer, setAnswer] = useState<string>("");
+  const [end, setEnd] = useState(false);
+  const [themeColor, setThemeColor] = useState("gray");
 
   const { data: questions, isFetching, isLoading, isError } = useGetQuestions();
   const { data: major } = useGetMajor(end, user?.id);
@@ -106,6 +108,21 @@ export function MenuComponent() {
   };
 
   const disabled = !user || !questions || questions.length === 0;
+
+  useEffect(() => {
+    if (activeIndex === 0) {
+      setThemeColor(colors[5]);
+    } else if (activeIndex === 1) {
+      setThemeColor(colors[3]);
+    } else if (activeIndex === 2) {
+      setThemeColor(colors[2]);
+    } else if (activeIndex === -1) {
+      setThemeColor("gray");
+    }
+  }, [activeIndex, themeColor]);
+
+  console.log(activeIndex);
+
   return (
     <div id="menu">
       <div
@@ -135,7 +152,7 @@ export function MenuComponent() {
         <button
           className={classNames(
             "menu-item",
-            activeIndex === 1 && "active",
+            activeIndex === 1 && "active ",
             showMenuItems >= 1 && "opacity-100",
             "transition-transform duration-300 ease-in-out transform translate-y-0 opacity-0"
           )}
@@ -148,7 +165,7 @@ export function MenuComponent() {
           }}
           disabled={disabled}
         >
-          <span>College Student</span>
+          College Student
           {activeIndex === 1 && (
             <span className="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full absolute top-1/2 transform -translate-y-1/2 ml-2">
               <span className="w-2 h-2 mr-1 bg-green-500 rounded-full"></span>
@@ -172,7 +189,7 @@ export function MenuComponent() {
           }}
           disabled={disabled}
         >
-          <span>Employer</span>
+          Employer
           {activeIndex === 2 && (
             <span className="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full absolute top-1/2 transform -translate-y-1/2 ml-2">
               <span className="w-2 h-2 mr-1 bg-green-500 rounded-full"></span>
@@ -184,6 +201,9 @@ export function MenuComponent() {
       <div
         id="menu-background-pattern"
         className={classNames(!showPattern && "opacity-0")}
+        style={{
+          backgroundImage: `radial-gradient(${themeColor} 9%, transparent 9%)`,
+        }}
       />
       <div id="menu-background-image" />
       <div
@@ -191,7 +211,8 @@ export function MenuComponent() {
           "absolute transition ease-in-out duration-1000 w-[40%] h-[45%] z-50 top-1/4 left-2/4",
           activeIndex === -1 && !clicked && "opacity-0 hidden",
           clicked &&
-            "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/4 opacity-1"
+            "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/4 opacity-1",
+          clicked && end && "transform -translate-y-[5%]"
         )}
       >
         <ChatBoxComponent
@@ -218,7 +239,7 @@ export function MenuComponent() {
             </span>
           }
         </ChatBoxComponent>
-        <div className={"mt-8 relative"}>
+        <div className={classNames("mt-8 relative", end && "hidden")}>
           <form onSubmit={submitHandler}>
             <label htmlFor="answer" className="sr-only">
               Answer
