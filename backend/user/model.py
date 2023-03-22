@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[87]:
-
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -12,24 +6,15 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.naive_bayes import MultinomialNB
+import pickle
 
-import string
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfVectorizer #
-
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score, f1_score, mean_squared_error
 
 # Model training/testing 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-
-#neural network
-from keras.preprocessing.text import Tokenizer
-
-
-# In[88]:
-
 
 df = pd.read_csv('LastOne.csv')
 df
@@ -50,11 +35,6 @@ cols = {'Timestamp',
        }
 df = df.drop(cols, axis = 1)
 df = df.dropna()
-df
-
-
-# In[89]:
-
 
 en_stopwords = stopwords.words("english")
 lemma = WordNetLemmatizer()
@@ -76,17 +56,9 @@ def clean1(text):
     return text
 
 
-# In[90]:
-
-
-# df['Cleaned_0'] = df['3. What made you choose this major?'].apply(clean)
 df['What did you like the most about your major?'] = df['What did you like the most about your major?'].apply(clean)
 df['1. What was your major of choice during your Bachelor\'s ?'] = df['1. What was your major of choice during your Bachelor\'s ?'].str.lower()
 df['1. What was your major of choice during your Bachelor\'s ?'] = df['1. What was your major of choice during your Bachelor\'s ?'].str.strip()
-
-
-# In[91]:
-
 
 df.drop(df.loc[df['1. What was your major of choice during your Bachelor\'s ?']== 'mba'].index, inplace=True)
 df.drop(df.loc[df['1. What was your major of choice during your Bachelor\'s ?']== 'emba'].index, inplace=True)
@@ -97,167 +69,39 @@ df.drop(df.loc[df['1. What was your major of choice during your Bachelor\'s ?']=
 df.drop(df.loc[df['1. What was your major of choice during your Bachelor\'s ?']== 'executive mba'].index, inplace=True)
 df['1. What was your major of choice during your Bachelor\'s ?'].values
 
-
-# In[92]:
-
-
-df
-
-
-# In[93]:
-
-
-df =df.iloc[:,2:9]
-df
-
-
-# In[94]:
-
-
-df
-
-
-# In[95]:
-
+df = df.iloc[:,2:9]
 
 majors_pd = pd.read_csv('Majors.csv')
 majors_df = df.iloc[:,0]
 key = majors_pd.iloc[:,1]
-majors_df
-
-
-# In[96]:
-
 
 for i in majors_df:
-  # print(i)
   l = majors_pd[majors_pd['Majors']== i].index.tolist()
   p = df[df['1. What was your major of choice during your Bachelor\'s ?']== i].index.tolist()
   df.loc[p,'New_Majors_Category'] = key._get_value(l[0])
-  # print(l , p)
-
-
-# In[97]:
-
 
 df['New_Majors_Category'] = df['New_Majors_Category'].astype(int)
-df
 
-
-# In[98]:
-
-
-X = df.iloc[:, 1:6]
-X
-
-
-# In[99]:
-
-
+X = df.iloc[:, 2:6]
 y = df.iloc[:,7]
-y
-
-
-# In[100]:
-
-
-from sklearn.preprocessing import OneHotEncoder
 
 ohe = OneHotEncoder(handle_unknown='ignore',sparse=False)
 
 X = pd.DataFrame(ohe.fit_transform(X))
 
-X
-
-
-# In[101]:
-
-
-from sklearn.naive_bayes import MultinomialNB
-
-X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.05, random_state=123)
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.4, random_state=123)
 
 model = MultinomialNB()
 model.fit(X_train, y_train)
 
 model.score(X_test, y_test)
 
+sample_dataset = [['Interest in the major', 'biology premed', 'Yes', 'Yes']]
 
-# In[102]:
+print(model.predict(ohe.transform(sample_dataset)))
 
+file1 = open('ohe.pickle','wb')
+pickle.dump(ohe, file1)
 
-from sklearn.model_selection import GridSearchCV
-from sklearn.neighbors import KNeighborsClassifier
-
-#List Hyperparameters that we want to tune.
-leaf_size = list(range(1,50))
-n_neighbors = list(range(1,30))
-p=[1,2]
-#Convert to dictionary
-hyperparameters = dict(leaf_size=leaf_size, n_neighbors=n_neighbors, p=p)
-#Create new KNN object
-knn_2 = KNeighborsClassifier()
-#Use GridSearch
-clf = GridSearchCV(knn_2, hyperparameters, cv=10)
-#Fit the model
-best_model = clf.fit(X_train,y_train)
-
-
-# In[110]:
-
-
-X_train
-
-
-# In[109]:
-
-
-X_test
-
-
-# In[103]:
-
-
-y_pred = clf.predict(X_test)
-
-
-# In[104]:
-
-
-from sklearn.metrics import accuracy_score
-
-accuracy_score(y_pred,y_test)
-
-
-# In[105]:
-
-
-from sklearn.neighbors import KNeighborsClassifier
-
-knn = KNeighborsClassifier(n_neighbors=1)
-knn.fit(X_train, y_train)
-
-
-# In[106]:
-
-
-y_pred1 = knn.predict(X_test)
-y_pred1
-
-
-# In[107]:
-
-
-from sklearn.metrics import accuracy_score
-
-accuracy_score(y_pred1,y_test)
-
-
-# In[114]:
-
-
-sample_dataset = [['No','Interest in the major', 'I like problem solving', 'Yes', 'Yes']]
-
-
-knn.predict(ohe.transform(sample_dataset))
-
+file = open('model.pickle','wb')
+pickle.dump(model, file)
