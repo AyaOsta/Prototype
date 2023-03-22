@@ -1,4 +1,4 @@
-import React, { FormEventHandler, useEffect, useState } from "react";
+import React, { FormEventHandler, Suspense, useEffect, useState } from "react";
 import { ChatBoxComponent } from "./chat-box.component";
 import { classNames } from "../utils/classnames.util";
 import { AiOutlineSend, IoSend } from "react-icons/all";
@@ -24,24 +24,27 @@ export function MenuComponent() {
   const [themeColor, setThemeColor] = useState("gray");
 
   const { data: questions, isFetching, isLoading, isError } = useGetQuestions();
-  const { data: major } = useGetMajor(end, user?.id);
+  const major = useGetMajor(end, user?.id);
   const { mutate: createUserFn, isError: createUserError } = useCreateUser({
     onSuccess: (data) => {
       setUser(data as UserSchema);
     },
   });
-  const { mutate: createResponseFn, isError: createResponseError } =
-    useCreateResponse({
-      onSuccess: () => {
-        if (questions && questionNumber < questions.length - 1) {
-          setQuestionNumber(questionNumber + 1);
-          setAnswer("");
-        } else {
-          setEnd(true);
-          setAnswer("");
-        }
-      },
-    });
+  const {
+    mutate: createResponseFn,
+    isError: createResponseError,
+    isLoading: creatingResponse,
+  } = useCreateResponse({
+    onSuccess: () => {
+      if (questions && questionNumber < questions.length - 1) {
+        setQuestionNumber(questionNumber + 1);
+        setAnswer("");
+      } else {
+        setEnd(true);
+        setAnswer("");
+      }
+    },
+  });
 
   const handleMouseOver = (index: number) => {
     if (!clicked) {
@@ -107,7 +110,8 @@ export function MenuComponent() {
     });
   };
 
-  const disabled = !user || !questions || questions.length === 0;
+  const disabled =
+    !user || !questions || questions.length === 0 || creatingResponse;
 
   useEffect(() => {
     if (activeIndex === 0) {
@@ -120,8 +124,6 @@ export function MenuComponent() {
       setThemeColor("gray");
     }
   }, [activeIndex, themeColor]);
-
-  console.log(activeIndex);
 
   return (
     <div id="menu">
@@ -235,7 +237,16 @@ export function MenuComponent() {
                 !end &&
                 questions &&
                 questions[questionNumber].text}
-              {end && <MagicalText text={"Hi hussien!"} />}
+              {end && (
+                <Suspense>
+                  <MagicalText
+                    text={
+                      major.data.code ||
+                      "An error occurred on the server try again later"
+                    }
+                  />
+                </Suspense>
+              )}
             </span>
           }
         </ChatBoxComponent>

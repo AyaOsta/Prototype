@@ -21,19 +21,21 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class MlMajorView(generics.GenericAPIView):
 
-    def get(self, req: Request, pk):
+    def get(self, request: Request, pk):
         try:
             user = UserModel.objects.get(id=pk)
         except UserModel.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-#         q5 = ResponseModel.objects.filter(user=user, question__number=5).get('text')
-#         q6 = ResponseModel.objects.filter(user=user, question__number=6).get('text')
-        # q7 = ResponseModel.objects.filter(user=user, question__number=7)
-        response_array = [q5, q6, 'Yes', 'Yes']
+        q5 = ResponseModel.objects.filter(user=user, question__number=5).first()
+        q6 = ResponseModel.objects.filter(user=user, question__number=6).first()
+        q7 = ResponseModel.objects.filter(user=user, question__number=7).first()
 
-#         dataset =[response_array]
-#         major = model.predict(ohe.transfrom(dataset))
+        response_array = [[q5.text if q5 else '', q6.text if q6 else '', 'Yes', 'Yes']]
+
+        model = pickle.load(open('model.pickle', 'rb'))
+        ohe = pickle.load(open('ohe.pickle', 'rb'))
+        major = model.predict(ohe.transform(response_array))
         print(major)
 
         return Response(status=status.HTTP_200_OK)
