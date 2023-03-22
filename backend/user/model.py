@@ -96,10 +96,6 @@ model.fit(X_train, y_train)
 
 model.score(X_test, y_test)
 
-sample_dataset = [['Interest in the major', 'biology premed', 'Yes', 'Yes']]
-
-print(model.predict(ohe.transform(sample_dataset)))
-
 file1 = open('ohe.pickle','wb')
 pickle.dump(ohe, file1)
 

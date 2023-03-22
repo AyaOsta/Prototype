@@ -8,11 +8,16 @@ export function MagicalText({ text }: { text: string }) {
       Math.floor(Math.random() * (max - min + 1)) + min;
 
     const animate = (star: HTMLSpanElement) => {
+      // @ts-ignore
       star.current.style.setProperty("--star-left", `${rand(-10, 100)}%`);
+      // @ts-ignore
       star.current.style.setProperty("--star-top", `${rand(-40, 80)}%`);
 
+      // @ts-ignore
       star.current.style.animation = "none";
+      // @ts-ignore
       star.current.offsetHeight;
+      // @ts-ignore
       star.current.style.animation = "";
     };
 

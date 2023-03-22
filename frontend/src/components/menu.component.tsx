@@ -1,4 +1,4 @@
-import React, { FormEventHandler, Suspense, useEffect, useState } from "react";
+import React, { FormEvent, Suspense, useEffect, useState } from "react";
 import { ChatBoxComponent } from "./chat-box.component";
 import { classNames } from "../utils/classnames.util";
 import { AiOutlineSend, IoSend } from "react-icons/all";
@@ -7,8 +7,8 @@ import { useCreateUser, useGetMajor } from "../hooks/user.hook";
 import { UserSchema } from "../schema/user.schema";
 import toast from "react-hot-toast";
 import { useCreateResponse } from "../hooks/response.hook";
-import { MagicalText } from "./magic.component";
 import { colors } from "../data/colors";
+import { MagicalText } from "./magic.component";
 
 export function MenuComponent() {
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -24,7 +24,7 @@ export function MenuComponent() {
   const [themeColor, setThemeColor] = useState("gray");
 
   const { data: questions, isFetching, isLoading, isError } = useGetQuestions();
-  const major = useGetMajor(end, user?.id);
+  const { data: major } = useGetMajor(end, user?.id);
   const { mutate: createUserFn, isError: createUserError } = useCreateUser({
     onSuccess: (data) => {
       setUser(data as UserSchema);
@@ -100,7 +100,7 @@ export function MenuComponent() {
     toast.error("Couldn't create a user try again later");
   }
 
-  const submitHandler = (e: FormEventHandler<HTMLFormElement>) => {
+  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // @ts-ignore
     createResponseFn({
@@ -124,6 +124,8 @@ export function MenuComponent() {
       setThemeColor("gray");
     }
   }, [activeIndex, themeColor]);
+
+  console.log(major);
 
   return (
     <div id="menu">
@@ -239,12 +241,15 @@ export function MenuComponent() {
                 questions[questionNumber].text}
               {end && (
                 <Suspense>
-                  <MagicalText
-                    text={
-                      major.data.code ||
-                      "An error occurred on the server try again later"
-                    }
-                  />
+                  {major && (
+                    <MagicalText
+                      text={
+                        // @ts-ignore
+                        major ||
+                        "An error occurred on the server try again later"
+                      }
+                    />
+                  )}
                 </Suspense>
               )}
             </span>

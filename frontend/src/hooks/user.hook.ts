@@ -8,7 +8,7 @@ import {
 import { useRef } from "react";
 import toast from "react-hot-toast";
 
-const QUERY_KEY = "questions";
+const QUERY_KEY = "users";
 
 export function getQueryKey(
   filters?: Record<string, unknown>,

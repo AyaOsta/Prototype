@@ -124,7 +124,6 @@ export function LandingComponent(props: { click: () => void }) {
           </div>
         ))}
       </div>
-      <div className="absolute bottom-0 text-2xl"> Logos go here</div>
     </div>
   );
 }
