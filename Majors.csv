@@ -3,7 +3,10 @@ civil engineering,0
 civil,0
 software engineering,1
 computer science,1
+public health,2
 biology,2
+auditing and finance,4
+audit,4
 banking & finance,4
 finance,4
 ba-finance,4
@@ -12,6 +15,7 @@ business finance,4
 banking and finance,4
 interior architecture,5
 interior architecture / environmental design,5
+graphic design,5
 interior designer,5
 communication,6
 mass communication,6
@@ -58,9 +62,8 @@ media,24
 social sciences,25
 political science & int’l affairs,25
 international affairs,25
+nutrition,26
 dietetics,26
-audit,27
-auditing and finance,27
 tele communication engineering,28
 telecommunication,28
 engineering of communication,28
@@ -68,11 +71,8 @@ cce,28
 teaching math for secondary,29
 education,29
 business management,30
-nutrition,31
 international relations,32
-public health,33
 physics,34
-graphic design,35
 agriculture engineer,36
 agriculture science,36
 chemical engineering,37
