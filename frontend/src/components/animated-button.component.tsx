@@ -31,7 +31,7 @@ export function AnimatedButton(props: { clickCallback: () => void }) {
   }
 
   return (
-    <div className={"absolute top-5 right-10 text-xl rounded-lg"}>
+    <div className={"text-xl rounded-lg"}>
       <button
         className="inline-block relative box-border py-8 px-16 text-xl font-bold text-white border-0 cursor-pointer overflow-hidden rounded-lg"
         onClick={props.clickCallback}

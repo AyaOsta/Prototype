@@ -31,16 +31,21 @@ class MlMajorView(generics.GenericAPIView):
         q5 = ResponseModel.objects.filter(user=user, question__number=5).first()
         q6 = ResponseModel.objects.filter(user=user, question__number=6).first()
         q7 = ResponseModel.objects.filter(user=user, question__number=7).first()
+        q8 = ResponseModel.objects.filter(user=user, question__number=8).first()
 
-        response_array = [[q5.text if q5 else '', q6.text if q6 else '', 'Yes', 'Yes']]
+        response_array = [[q5.text if q5 else '', q6.text if q6 else '', q7.text if q7 else 'Yes', q8.text if q8 else 'Yes']]
 
         print(response_array)
 
         model = pickle.load(open(abspath('user/model.pickle'), 'rb'))
         ohe = pickle.load(open(abspath('user/ohe.pickle'), 'rb'))
-        major = model.predict(ohe.transform(response_array))
+        pr = pickle.load(open(abspath('user/print.pickle'), 'rb'))
+        print(pr, ohe, model)
+        major_code = model.predict(ohe.transform(response_array))[0]
+#         major = pr.print(major_code[0])
+        major = major_code
 
         try:
-            return Response(major[0],status=status.HTTP_200_OK)
+            return Response(major,status=status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_418_IM_A_TEAPOT)

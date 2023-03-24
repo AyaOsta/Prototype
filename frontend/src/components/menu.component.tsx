@@ -125,8 +125,6 @@ export function MenuComponent() {
     }
   }, [activeIndex, themeColor]);
 
-  console.log(major);
-
   return (
     <div id="menu">
       <div
@@ -212,26 +210,29 @@ export function MenuComponent() {
       <div id="menu-background-image" />
       <div
         className={classNames(
-          "absolute transition ease-in-out duration-1000 w-[40%] h-[45%] z-50 top-1/4 left-2/4",
+          "h-3/4 w-[93%] z-50 absolute transition ease-in-out duration-1000 mx-[2.5%] md:w-[40%] md:h-[45%] md:top-1/4 md:left-2/4 mx-0",
           activeIndex === -1 && !clicked && "opacity-0 hidden",
           clicked &&
-            "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/4 opacity-1",
+            "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:-translate-y-1/4 opacity-1",
           clicked && end && "transform -translate-y-[5%]"
         )}
       >
         <ChatBoxComponent
           className={classNames(
-            activeIndex === 0 && "ring-palate-600",
-            activeIndex === 1 && "ring-palate-400",
-            activeIndex === 2 && "ring-palate-300",
+            activeIndex === 0 && "block ring-palate-600 sm:hidden md:block",
+            activeIndex === 1 && "md:block ring-palate-400 sm:hidden",
+            activeIndex === 2 && "md:block ring-palate-300 sm:hidden",
             clicked && "ring-gray-600"
           )}
         >
           {
             <span>
-              {activeIndex === 0 && "lorem ipsium highschool student"}
-              {activeIndex === 1 && "lorem ipsium college student"}
-              {activeIndex === 2 && "lorem ipsium employeer"}
+              {activeIndex === 0 &&
+                "Students can use the platform to discover majors that align with their interests and strengths, which can lead to greater academic success and job satisfaction."}
+              {activeIndex === 1 &&
+                "Educational institutions can also benefit from the project by attracting and retaining students who are well-suited for their programs. This can lead to higher graduation rates, better outcomes for graduates, better ranking, and better reputation."}
+              {activeIndex === 2 &&
+                "Employers can benefit from an AI student-major fit project by having access to a pool of highly qualified job candidates who are a good fit for their specific needs."}
               {clicked &&
                 !isLoading &&
                 !isFetching &&
@@ -244,7 +245,6 @@ export function MenuComponent() {
                   {major && (
                     <MagicalText
                       text={
-                        // @ts-ignore
                         major ||
                         "An error occurred on the server try again later"
                       }

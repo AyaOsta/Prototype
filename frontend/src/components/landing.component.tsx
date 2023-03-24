@@ -85,10 +85,19 @@ export function LandingComponent(props: { click: () => void }) {
 
   return (
     <div className="landing">
-      <div className="absolute top-5 left-1/2 text-2xl -translate-x-1/2 font-bold hover:underline">
-        <span>Student Major Fit</span>
+      <div className="fixed top-4 left-0 w-screen flex items-start justify-between w-full text-2xl font-bold hover:underline mt-0">
+        <div className="hidden relative ml-5 mr-auto opacity-0 md:block">
+          <AnimatedButton
+            clickCallback={() => console.log("remove me later")}
+          />
+        </div>
+        <h1 className="text-3xl text-gray-900 md:text-4xl mx-auto cursor-pointer">
+          Student Major Fit
+        </h1>
+        <div className="relative mr-5 ml-auto">
+          <AnimatedButton clickCallback={props.click} />
+        </div>
       </div>
-      <AnimatedButton clickCallback={props.click} />
       <div
         className={"wrapper"}
         data-configuration={combination.configuration}

@@ -13,9 +13,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code to working directory
 COPY . .
 
-EXPOSE 8000
+EXPOSE 10000
 
 ENV DJANGO_SETTINGS_MODULE=ml.settings
 ENV PYTHONUNBUFFERED=1
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["gunicorn", "--bind", "0.0.0.0:10000","ml.wsgi"]

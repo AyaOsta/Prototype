@@ -47,7 +47,7 @@ export const useCreateUser = (options?: MutationOptions) => {
 export const useGetMajor = (enabled: boolean, id?: number) => {
   const { getMajor } = useUserApi();
 
-  const query = useQuery<{}>(getQueryKey(), () => getMajor(id), {
+  const query = useQuery<string>(getQueryKey(), () => getMajor(id), {
     keepPreviousData: true,
     enabled: Boolean(id) && enabled,
     onError: (err: any) => {
