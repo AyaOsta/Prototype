@@ -7,3 +7,4 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionModel
         fields = '__all__'
+        ordering = ['number']

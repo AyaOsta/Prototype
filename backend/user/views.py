@@ -35,8 +35,6 @@ class MlMajorView(generics.GenericAPIView):
 
         response_array = [[q5.text if q5 else '', q6.text if q6 else '', q7.text if q7 else 'Yes', q8.text if q8 else 'Yes']]
 
-        print(response_array)
-
         model = pickle.load(open(abspath('user/model.pickle'), 'rb'))
         ohe = pickle.load(open(abspath('user/ohe.pickle'), 'rb'))
         pr = pickle.load(open(abspath('user/print.pickle'), 'rb'))
